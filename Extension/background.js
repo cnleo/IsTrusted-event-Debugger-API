@@ -11,7 +11,7 @@ var xC, yC;
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     console.log(sender.tab ?
-      "from a content script:" + sender.tab.url :
+      "from a content script:" + sender.tab.id :
       "from the extension");
     if (request.eventPlease === "trusted")
   if (debuggerEnabled){
@@ -22,13 +22,13 @@ chrome.runtime.onMessage.addListener(
     xC = request.x; yC = request.y;
     if (request.mouse == "D") {
       console.log("down");
-      chrome.debugger.sendCommand(debugIdGlobal, "Input.dispatchMouseEvent", { type: "mousePressed", x: xC, y: yC, button: "left" }, function (e) { console.log('clickDown', e) });
+      chrome.debugger.sendCommand({ tabId: sender.tab.id }, "Input.dispatchMouseEvent", { type: "mousePressed", x: xC, y: yC, button: "left" }, function (e) { console.log('clickDown', e) });
 
 
     } else if (request.mouse == "U") {
       console.log("up");
 
-      chrome.debugger.sendCommand(debugIdGlobal, "Input.dispatchMouseEvent", { type: "mouseReleased", x: xC, y: yC, button: "left" }, function (e) { console.log('clickUp', e) });
+      chrome.debugger.sendCommand({ tabId: sender.tab.id }, "Input.dispatchMouseEvent", { type: "mouseReleased", x: xC, y: yC, button: "left" }, function (e) { console.log('clickUp', e) });
 
     }
 
